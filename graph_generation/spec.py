@@ -14,6 +14,7 @@ GraphModel = Literal[
     "grid",
     "toy_reducible",
     "toy_dangling",
+    "barbell",
 ]
 
 @dataclass

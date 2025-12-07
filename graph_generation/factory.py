@@ -11,7 +11,7 @@ def generate_graph(spec: GraphSpec) -> GraphData:
         G = random_models.barabasi_albert_graph(spec)
     elif spec.model == "directed_scale_free":
         G = random_models.directed_scale_free_graph(spec)
-    elif spec.model in {"grid", "toy_reducible", "toy_dangling"}:
+    elif spec.model in {"grid", "toy_reducible", "toy_dangling", "barbell"}:
         G = toy_models.generate_toy_graph(spec)
     else:
         raise ValueError(f"Unknown graph model: {spec.model}")

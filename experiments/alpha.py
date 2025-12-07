@@ -12,7 +12,7 @@ def experiment_alpha_convergence():
         GraphSpec(
             model="erdos_renyi",
             n=2000,
-            params={"p": 0.003},
+            params={"p": 0.03},
             directed=True,
             seed=0,
             name="ER",
@@ -28,6 +28,23 @@ def experiment_alpha_convergence():
         GraphSpec(
             model="directed_scale_free",
             n=2000,
+            params={},  # use default values from OG paper
+            directed=True,
+            seed=0,
+            name="ScaleFree",
+        ),
+        GraphSpec(
+            model="barbell",
+            n=2000,
+            params={},
+            name="Barbell",
+        )
+    ]
+
+    specs = [
+        GraphSpec(
+            model="directed_scale_free",
+            n=20000,
             params={},  # use default values from OG paper
             directed=True,
             seed=0,
@@ -71,7 +88,8 @@ def experiment_alpha_convergence():
             iters = len(history)
             final_res = history[-1]
 
-            lam2 = pm.estimate_second_eigenvalue()
+            #lam2 = pm.estimate_second_eigenvalue()
+            lam2 = 0
             gap = 1.0 - lam2 if not np.isnan(lam2) else np.nan
 
             print(
