@@ -22,6 +22,7 @@ def remove_isolated_nodes(G: nx.Graph | nx.DiGraph):
 def graph_to_adjacency(G: nx.Graph | nx.DiGraph) -> sp.csr_matrix:
     return nx.to_scipy_sparse_array(G, format="csr", dtype=float)
 
+"""
 def adjacency_to_pagerank_matrix(A: sp.csr_matrix) -> sp.csr_matrix:
     A = A.tocsr()
     n = A.shape[0]
@@ -41,6 +42,34 @@ def adjacency_to_pagerank_matrix(A: sp.csr_matrix) -> sp.csr_matrix:
         U[:, :] = 1.0 / n
         U = sp.csr_matrix(U)
         P[dangling_idx, :] = U
+
+    return P
+"""
+
+def adjacency_to_pagerank_matrix(A: sp.csr_matrix) -> sp.csr_matrix:
+    P = A.tocsr(copy=True)
+    n = P.shape[0]
+
+    # Row sums = out-degrees
+    out_deg = np.asarray(P.sum(axis=1)).ravel()
+    is_dangling = out_deg == 0
+
+    indptr = P.indptr
+    data = P.data
+    for i in range(n):
+        if not is_dangling[i]:
+            start, end = indptr[i], indptr[i + 1]
+            if start < end:
+                data[start:end] /= out_deg[i]
+
+    # Handle dangling rows: set them to uniform 1/n
+    if is_dangling.any():
+        P = P.tolil()
+        dangling_idx = np.where(is_dangling)[0]
+        for i in dangling_idx:
+            P.rows[i] = list(range(n))
+            P.data[i] = [1.0 / n] * n
+        P = P.tocsr()
 
     return P
 

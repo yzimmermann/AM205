@@ -18,9 +18,9 @@ class PowerMethod:
         """
 
         self.dangle_check(matrix)
-        self.matrix, self.issparse = self.choose_matrix_format(matrix, mode=MODE)
-        self.matrix = matrix
-        self.n = matrix.shape[0]
+        #self.matrix, self.issparse = self.choose_matrix_format(matrix, mode=MODE)
+        self.matrix, self.issparse = self.simple_choose_matrix_format(matrix)
+        self.n = self.matrix.shape[0]
         self.alpha = alpha #for nome, just a tag for identification later on. assuming matrix contains alpha already.
         self.tol = tol
         self.max_iter = max_iter
@@ -85,7 +85,15 @@ class PowerMethod:
                 return matrix.toarray().astype(float), False
             return np.asarray(matrix, dtype=float), False
 
+    @staticmethod
+    def simple_choose_matrix_format(matrix):
+        if issparse(matrix):
+            if matrix.dtype != np.float64:
+                matrix = matrix.astype(np.float64, copy=False)
+            return matrix, True
 
+        A = np.asarray(matrix, dtype=np.float64)
+        return A, False
 
     def __getitem__(self, key):
         #to make accessing variables easier
@@ -102,9 +110,10 @@ class PowerMethod:
         """
         Perform one iteration of the power method, normalizing the result and computing the residual.
         """
-        state_new = (self.alpha * self.matrix @ self.state) + (1 - self.alpha) * self.v
-        residual = np.linalg.norm(state_new - self.state, 1)  # L1 norm for residual
-        self.state = state_new #don't normalize, since it should be fine - a blow up indicates a problem.
+        y = self.matrix @ self.state
+        state_new = self.alpha * y + (1.0 - self.alpha) * self.v
+        residual = np.linalg.norm(state_new - self.state, 1) # L1 norm for residual
+        self.state = state_new
         self.residuals.append(residual)
 
     def iterate(self):
