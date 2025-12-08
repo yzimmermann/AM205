@@ -1,0 +1,11 @@
+font.family      : serif
+font.serif       : Computer Modern
+font.size        : 13
+axes.labelsize   : 13
+xtick.labelsize  : 13
+ytick.labelsize  : 13
+legend.fontsize  : 13
+axes.linewidth   : 1.0
+lines.linewidth  : 1.5
+lines.markersize : 5
+text.usetex      : True
