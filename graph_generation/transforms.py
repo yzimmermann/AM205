@@ -22,6 +22,7 @@ def remove_isolated_nodes(G: nx.Graph | nx.DiGraph):
 def graph_to_adjacency(G: nx.Graph | nx.DiGraph) -> sp.csr_matrix:
     return nx.to_scipy_sparse_array(G, format="csr", dtype=float)
 
+# Old version before profiling
 """
 def adjacency_to_pagerank_matrix(A: sp.csr_matrix) -> sp.csr_matrix:
     A = A.tocsr()

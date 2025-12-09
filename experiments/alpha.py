@@ -23,7 +23,6 @@ def experiment_alpha_convergence():
             model="barabasi_albert",
             n=2000,
             params={"m": 3},
-            directed=True,
             seed=0,
             name="Barabási–Albert",
         ),

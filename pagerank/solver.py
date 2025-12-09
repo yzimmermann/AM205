@@ -135,9 +135,13 @@ class PowerMethod:
         """
         Compute all eigenvalues and eigenvectors of the matrix.
         """
-        eigenvalues, eigenvectors = np.linalg.eig(self.matrix)
+        M = self.matrix
+        if issparse(M):
+            M = M.toarray()
+        eigenvalues, eigenvectors = np.linalg.eig(M)
         self.eigenvalues = eigenvalues
         self.eigenvectors = eigenvectors
+        return eigenvalues
 
     def estimate_second_eigenvalue(self, k=3) -> float:
         """
